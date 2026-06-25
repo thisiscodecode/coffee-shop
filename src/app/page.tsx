@@ -735,7 +735,7 @@ function ContactSection() {
             {
               icon: Instagram,
               title: "اینستاگرام",
-              detail: "@coffeeglacé",
+              detail: "@coffeeglace",
             },
           ].map((item) => (
             <div
