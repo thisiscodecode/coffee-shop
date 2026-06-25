@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
-  <rect width="400" height="400" fill="#e8ddd0"/>
-  <circle cx="200" cy="160" r="70" fill="#c9a87c" opacity="0.25"/>
-  <text x="200" y="175" text-anchor="middle" font-size="64" fill="#5e3b24">☕</text>
-  <text x="200" y="270" text-anchor="middle" font-size="16" fill="#7d5230" font-family="sans-serif" font-weight="bold">کاپوچینو</text>
-</svg>
