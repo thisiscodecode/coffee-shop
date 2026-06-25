@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
-  <rect width="400" height="400" fill="#dde8dd"/>
-  <circle cx="200" cy="170" r="60" fill="#7cc9a0" opacity="0.3"/>
-  <text x="200" y="180" text-anchor="middle" font-size="60" fill="#247d4a">🍃</text>
-  <text x="200" y="270" text-anchor="middle" font-size="18" fill="#3a7d50" font-family="sans-serif">Tea &amp; Herbal</text>
-</svg>
