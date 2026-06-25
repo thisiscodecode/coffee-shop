@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { motion, AnimatePresence, useInView, useScroll, useTransform } from "framer-motion";
 import {
   Coffee,
   GlassWater,
@@ -19,7 +19,7 @@ import {
   Star,
   Heart,
   Sparkles,
-} from "lucide-react";
+  } from "lucide-react";
 import { menuCategories, formatPrice, type Product, type MenuCategory } from "@/lib/menu-data";
 
 /* ───────── Icon Map ───────── */
@@ -48,65 +48,223 @@ const staggerContainer = {
 
 /* ───────── Badges ───────── */
 const badgeColors: Record<string, string> = {
-  "پرفروش": "bg-amber-100 text-amber-800",
-  "محبوب": "bg-rose-100 text-rose-800",
-  "ویژه": "bg-violet-100 text-violet-800",
-  "پیشنهاد سرآشپز": "bg-emerald-100 text-emerald-800",
+  "پرفروش": "bg-amber-200/80 text-amber-900",
+  "محبوب": "bg-rose-200/80 text-rose-900",
+  "ویژه": "bg-violet-200/80 text-violet-900",
+  "پیشنهاد سرآشپز": "bg-emerald-200/80 text-emerald-900",
 };
+
+/* ═══════════════════════════════════════════
+   STEAMING COFFEE CUP SVG
+   ═══════════════════════════════════════════ */
+function SteamCup({ className = "" }: { className?: string }) {
+  return (
+    <div className={`relative ${className}`}>
+      <svg
+        viewBox="0 0 120 130"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="w-full h-full drop-shadow-lg"
+      >
+        {/* Saucer */}
+        <ellipse cx="52" cy="118" rx="44" ry="8" fill="#d4c4a8" opacity="0.5" />
+        <ellipse cx="52" cy="115" rx="40" ry="7" fill="#e8ddd0" />
+
+        {/* Cup body */}
+        <path
+          d="M22 55 L28 108 C28 108 30 115 52 115 C74 115 76 108 76 108 L82 55 Z"
+          fill="#f2ebe2"
+          stroke="#c9a87c"
+          strokeWidth="1.5"
+        />
+        {/* Coffee surface */}
+        <ellipse cx="52" cy="58" rx="30" ry="7" fill="#5e3b24" />
+        <ellipse cx="48" cy="57" rx="12" ry="3" fill="#7d5230" opacity="0.6" />
+
+        {/* Cup rim */}
+        <ellipse cx="52" cy="55" rx="31" ry="7.5" fill="none" stroke="#c9a87c" strokeWidth="1.5" />
+
+        {/* Handle */}
+        <path
+          d="M82 62 C92 62 98 72 98 82 C98 92 92 98 82 98"
+          fill="none"
+          stroke="#c9a87c"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+
+        {/* Decorative line on cup */}
+        <path
+          d="M30 72 L74 72"
+          stroke="#c9a87c"
+          strokeWidth="0.8"
+          opacity="0.5"
+        />
+        <path
+          d="M30 76 L74 76"
+          stroke="#c9a87c"
+          strokeWidth="0.5"
+          opacity="0.3"
+        />
+
+        {/* Steam wisps */}
+        <path
+          d="M38 48 C35 38 42 32 39 22 C36 12 44 6 41 0"
+          stroke="rgba(255,255,255,0.5)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          fill="none"
+          className="steam-wisp-1"
+        />
+        <path
+          d="M52 46 C49 36 56 30 53 20 C50 10 58 4 55 -2"
+          stroke="rgba(255,255,255,0.4)"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          fill="none"
+          className="steam-wisp-2"
+        />
+        <path
+          d="M66 48 C63 38 70 32 67 22 C64 12 72 6 69 0"
+          stroke="rgba(255,255,255,0.35)"
+          strokeWidth="2"
+          strokeLinecap="round"
+          fill="none"
+          className="steam-wisp-3"
+        />
+      </svg>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   FLOATING BACKGROUND PARTICLES
+   ═══════════════════════════════════════════ */
+const particleEmojis = ["☕", "🫖", "🍵", "☕", "✨", "☕", "🍃", "☕"];
+
+function FloatingParticles() {
+  const particles = useMemo(
+    () =>
+      Array.from({ length: 14 }, (_, i) => ({
+        id: i,
+        emoji: particleEmojis[i % particleEmojis.length],
+        left: `${8 + (i * 6.5) % 85}%`,
+        top: `${5 + (i * 7) % 90}%`,
+        size: `${0.9 + (i % 3) * 0.5}rem`,
+        delay: i * 0.8,
+        duration: 5 + (i % 4) * 2,
+        opacity: 0.04 + (i % 3) * 0.015,
+      })),
+    []
+  );
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute select-none"
+          style={{
+            left: p.left,
+            top: p.top,
+            fontSize: p.size,
+            opacity: p.opacity,
+            color: "#5e3b24",
+          }}
+          animate={{
+            y: [0, -18, 0],
+            rotate: [0, p.id % 2 === 0 ? 8 : -8, 0],
+          }}
+          transition={{
+            duration: p.duration,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: p.delay,
+          }}
+        >
+          {p.emoji}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
 
 /* ═══════════════════════════════════════════
    HERO SECTION
    ═══════════════════════════════════════════ */
 function HeroSection() {
+  const { scrollY } = useScroll();
+  const bgY = useTransform(scrollY, [0, 800], [0, 150]);
+  const contentOpacity = useTransform(scrollY, [0, 500], [1, 0]);
+  const contentY = useTransform(scrollY, [0, 500], [0, 60]);
+
   return (
     <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
       {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-coffee-900 via-coffee-800 to-coffee-700" />
+      <motion.div
+        className="absolute inset-0 bg-gradient-to-br from-coffee-900 via-coffee-800 to-coffee-700"
+        style={{ y: bgY }}
+      />
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-25"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 40%), radial-gradient(circle at 60% 80%, rgba(255,255,255,0.06) 0%, transparent 45%)",
+            "radial-gradient(circle at 15% 45%, rgba(217,165,100,0.15) 0%, transparent 50%), radial-gradient(circle at 85% 25%, rgba(255,220,150,0.12) 0%, transparent 40%), radial-gradient(circle at 55% 75%, rgba(200,150,80,0.1) 0%, transparent 45%), radial-gradient(circle at 40% 15%, rgba(255,200,100,0.08) 0%, transparent 35%)",
         }}
       />
 
       {/* Floating coffee beans decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(6)].map((_, i) => (
+        {[...Array(8)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute text-white/5 text-6xl select-none"
+            className="absolute select-none"
             initial={{ y: 100, rotate: 0 }}
             animate={{
               y: [100, -20, 100],
               rotate: [0, 180, 360],
-              x: [0, (i % 2 === 0 ? 30 : -30), 0],
+              x: [0, (i % 2 === 0 ? 25 : -25), 0],
             }}
             transition={{
-              duration: 8 + i * 2,
+              duration: 7 + i * 2,
               repeat: Infinity,
               ease: "easeInOut",
-              delay: i * 1.5,
+              delay: i * 1.2,
             }}
             style={{
-              left: `${15 + i * 14}%`,
-              top: `${20 + (i % 3) * 25}%`,
-              fontSize: `${2 + (i % 3) * 0.8}rem`,
+              left: `${10 + i * 11}%`,
+              top: `${15 + (i % 3) * 28}%`,
+              fontSize: `${1.8 + (i % 3) * 0.7}rem`,
+              opacity: 0.04 + (i % 3) * 0.01,
+              color: "#d4c4a8",
             }}
           >
-            ☕
+            {i % 3 === 0 ? "☕" : i % 3 === 1 ? "🫖" : "🍃"}
           </motion.div>
         ))}
       </div>
 
       {/* Content */}
-      <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
+      <motion.div
+        className="relative z-10 text-center px-6 max-w-3xl mx-auto"
+        style={{ opacity: contentOpacity, y: contentY }}
+      >
+        {/* Steam Cup */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.7, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="mx-auto mb-6 w-24 sm:w-28 md:w-32"
+        >
+          <SteamCup />
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
         >
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2 mb-8 border border-white/10">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2 mb-6 border border-white/10">
             <Sparkles className="w-4 h-4 text-amber-300" />
             <span className="text-white/80 text-sm tracking-wide">
               تجربه‌ای متفاوت از قهوه
@@ -115,35 +273,35 @@ function HeroSection() {
         </motion.div>
 
         <motion.h1
-          className="text-5xl sm:text-7xl lg:text-8xl font-bold text-white mb-4 tracking-tight"
+          className="text-4xl sm:text-6xl lg:text-7xl font-bold text-white mb-2 tracking-tight"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
           Coffee{" "}
-          <span className="text-transparent bg-clip-text bg-gradient-to-l from-amber-300 to-amber-100">
+          <span className="text-transparent bg-clip-text bg-gradient-to-l from-amber-300 via-amber-200 to-amber-100">
             Glacé
           </span>
         </motion.h1>
 
         <motion.p
-          className="text-xl sm:text-2xl text-amber-100/70 font-light mb-3"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-amber-100/80 mb-4 tracking-wide"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.35 }}
         >
           کافی گلاسه
         </motion.p>
 
         <motion.div
-          className="w-16 h-0.5 bg-gradient-to-l from-amber-400 to-transparent mx-auto my-8"
+          className="w-20 h-0.5 bg-gradient-to-l from-amber-400 via-amber-300 to-transparent mx-auto my-7"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
         />
 
         <motion.p
-          className="text-white/60 text-base sm:text-lg max-w-lg mx-auto leading-relaxed mb-10"
+          className="text-white/60 text-sm sm:text-base max-w-md mx-auto leading-relaxed mb-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
@@ -164,10 +322,10 @@ function HeroSection() {
           مشاهده منو
           <ChevronUp className="w-4 h-4 rotate-90" />
         </motion.a>
-      </div>
+      </motion.div>
 
       {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-warm-gray to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-warm-gray to-transparent" />
     </section>
   );
 }
@@ -184,9 +342,8 @@ function StickyNav({ categories }: { categories: MenuCategory[] }) {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      setShowNav(scrollY > window.innerHeight * 0.7);
+      setShowNav(scrollY > window.innerHeight * 0.6);
 
-      // Detect active section
       const sections = categories.map((c) => document.getElementById(`menu-${c.id}`));
       let current = "";
       for (const section of sections) {
@@ -221,16 +378,16 @@ function StickyNav({ categories }: { categories: MenuCategory[] }) {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -80, opacity: 0 }}
           transition={{ duration: 0.35, ease: "easeOut" }}
-          className="fixed top-0 left-0 right-0 z-50 bg-warm-gray/80 backdrop-blur-xl border-b border-coffee-200/50 shadow-sm"
+          className="fixed top-0 left-0 right-0 z-50 bg-warm-gray/85 backdrop-blur-xl border-b border-coffee-300/40 shadow-md"
         >
           <div className="max-w-6xl mx-auto px-4">
-            <div className="flex items-center justify-between h-16">
+            <div className="flex items-center justify-between h-14 sm:h-16">
               {/* Logo */}
               <button
                 onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                className="text-lg font-bold text-coffee-800 flex items-center gap-2"
+                className="text-base sm:text-lg font-bold text-coffee-800 flex items-center gap-1.5 sm:gap-2"
               >
-                <Coffee className="w-5 h-5" />
+                <Coffee className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>Coffee Glacé</span>
               </button>
 
@@ -243,10 +400,10 @@ function StickyNav({ categories }: { categories: MenuCategory[] }) {
                     <button
                       key={cat.id}
                       onClick={() => scrollTo(cat.id)}
-                      className={`relative px-4 py-2 text-sm rounded-lg transition-colors flex items-center gap-1.5 ${
+                      className={`relative px-3 lg:px-4 py-2 text-sm rounded-lg transition-all duration-300 flex items-center gap-1.5 ${
                         isActive
-                          ? "text-coffee-800 bg-coffee-100/60 font-medium"
-                          : "text-coffee-600 hover:text-coffee-800 hover:bg-coffee-100/30"
+                          ? "text-coffee-800 bg-coffee-200/60 font-medium shadow-sm"
+                          : "text-coffee-600 hover:text-coffee-800 hover:bg-coffee-200/30"
                       }`}
                     >
                       <Icon className="w-4 h-4" />
@@ -259,7 +416,7 @@ function StickyNav({ categories }: { categories: MenuCategory[] }) {
               {/* Mobile menu button */}
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="md:hidden p-2 rounded-lg text-coffee-700 hover:bg-coffee-100/50"
+                className="md:hidden p-2.5 rounded-xl text-coffee-700 hover:bg-coffee-200/40 transition-colors active:scale-95"
               >
                 {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
@@ -274,9 +431,9 @@ function StickyNav({ categories }: { categories: MenuCategory[] }) {
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.25 }}
-                className="md:hidden overflow-hidden border-t border-coffee-200/30 bg-warm-gray/95 backdrop-blur-xl"
+                className="md:hidden overflow-hidden border-t border-coffee-300/30 bg-warm-gray/95 backdrop-blur-xl"
               >
-                <nav className="max-w-6xl mx-auto px-4 py-3 flex flex-col gap-1">
+                <nav className="max-w-6xl mx-auto px-4 py-2 flex flex-col gap-0.5">
                   {categories.map((cat) => {
                     const Icon = iconMap[cat.icon] || Coffee;
                     const isActive = activeSection === cat.id;
@@ -284,10 +441,10 @@ function StickyNav({ categories }: { categories: MenuCategory[] }) {
                       <button
                         key={cat.id}
                         onClick={() => scrollTo(cat.id)}
-                        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors ${
+                        className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm transition-all duration-200 ${
                           isActive
-                            ? "bg-coffee-100/60 text-coffee-800 font-medium"
-                            : "text-coffee-600 hover:bg-coffee-100/30"
+                            ? "bg-coffee-200/50 text-coffee-800 font-medium"
+                            : "text-coffee-600 hover:bg-coffee-200/25 active:bg-coffee-200/40"
                         }`}
                       >
                         <Icon className="w-4 h-4" />
@@ -315,65 +472,65 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
     <motion.div
       variants={fadeUp}
       custom={index}
-      className="group relative bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-coffee-100/50"
+      className="group relative bg-warm-card rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-coffee-200/50 hover:border-coffee-300/60"
     >
       {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-coffee-100">
+      <div className="relative aspect-square overflow-hidden bg-coffee-200/40">
         {!imgError ? (
           <Image
             src={product.image}
             alt={product.name}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-110"
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            sizes="(max-width: 640px) 48vw, (max-width: 768px) 32vw, (max-width: 1024px) 28vw, 22vw"
             onError={() => setImgError(true)}
           />
         ) : (
           <div className="img-shimmer w-full h-full flex items-center justify-center">
-            <Coffee className="w-12 h-12 text-coffee-300" />
+            <Coffee className="w-10 h-10 sm:w-12 sm:h-12 text-coffee-400" />
           </div>
         )}
 
         {/* Badge */}
         {product.badge && (
-          <div className="absolute top-3 right-3">
+          <div className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3">
             <span
-              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium backdrop-blur-sm ${
+              className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium backdrop-blur-sm ${
                 badgeColors[product.badge] || "bg-white/90 text-coffee-800"
               }`}
             >
-              {product.badge === "پرفروش" && <Star className="w-3 h-3" />}
-              {product.badge === "محبوب" && <Heart className="w-3 h-3" />}
-              {product.badge === "ویژه" && <Sparkles className="w-3 h-3" />}
-              {product.badge === "پیشنهاد سرآشپز" && <Star className="w-3 h-3" />}
+              {product.badge === "پرفروش" && <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
+              {product.badge === "محبوب" && <Heart className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
+              {product.badge === "ویژه" && <Sparkles className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
+              {product.badge === "پیشنهاد سرآشپز" && <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
               {product.badge}
             </span>
           </div>
         )}
 
         {/* Hover overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="absolute inset-0 bg-gradient-to-t from-coffee-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-3 sm:p-4">
         {/* Name and Price */}
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <h3 className="text-base font-semibold text-coffee-900 leading-relaxed">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1.5 sm:gap-2 mb-2 sm:mb-3">
+          <h3 className="text-sm sm:text-base font-semibold text-coffee-900 leading-relaxed">
             {product.name}
           </h3>
-          <div className="shrink-0 bg-coffee-100/80 text-coffee-700 text-sm font-bold px-3 py-1 rounded-full">
+          <div className="shrink-0 bg-coffee-200/60 text-coffee-700 text-xs sm:text-sm font-bold px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full self-start sm:self-auto">
             {formatPrice(product.price)}
           </div>
         </div>
 
         {/* Divider */}
-        <div className="w-full h-px bg-gradient-to-l from-coffee-200/60 via-coffee-200/30 to-transparent mb-3" />
+        <div className="w-full h-px bg-gradient-to-l from-coffee-300/40 via-coffee-200/30 to-transparent mb-2 sm:mb-3" />
 
         {/* Ingredients */}
-        <div className="flex items-start gap-2">
-          <span className="text-xs text-coffee-400 mt-0.5 shrink-0">مواد:</span>
-          <p className="text-xs text-coffee-500 leading-relaxed">
+        <div className="flex items-start gap-1.5 sm:gap-2">
+          <span className="text-[10px] sm:text-xs text-coffee-500 mt-0.5 shrink-0">مواد:</span>
+          <p className="text-[10px] sm:text-xs text-coffee-600 leading-relaxed">
             {product.ingredients}
           </p>
         </div>
@@ -385,6 +542,14 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 /* ═══════════════════════════════════════════
    MENU SECTION
    ═══════════════════════════════════════════ */
+const sectionBgs = [
+  "section-warm-a",
+  "section-warm-b",
+  "section-warm-c",
+  "section-warm-a",
+  "section-warm-b",
+];
+
 function MenuSection({
   category,
   index,
@@ -393,32 +558,35 @@ function MenuSection({
   index: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const isInView = useInView(ref, { once: true, margin: "-60px" });
   const Icon = iconMap[category.icon] || Coffee;
 
   return (
     <section
       id={`menu-${category.id}`}
       ref={ref}
-      className="py-16 sm:py-20 scroll-mt-20"
+      className={`py-12 sm:py-16 md:py-20 scroll-mt-20 ${sectionBgs[index % sectionBgs.length]} relative`}
     >
+      {/* Subtle floating particles */}
+      <FloatingParticles />
+
       {/* Category Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.5, delay: index * 0.1 }}
-        className="text-center mb-12"
+        className="text-center mb-8 sm:mb-12 relative z-10"
       >
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-coffee-100 text-coffee-700 mb-4">
-          <Icon className="w-7 h-7" />
+        <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-coffee-200/60 text-coffee-700 mb-3 sm:mb-4">
+          <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
         </div>
-        <h2 className="text-2xl sm:text-3xl font-bold text-coffee-900 mb-3">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-coffee-900 mb-2 sm:mb-3">
           {category.title}
         </h2>
-        <p className="text-coffee-500 max-w-md mx-auto text-sm leading-relaxed">
+        <p className="text-coffee-600 max-w-md mx-auto text-xs sm:text-sm leading-relaxed px-4">
           {category.description}
         </p>
-        <div className="w-12 h-0.5 bg-coffee-300 mx-auto mt-4 rounded-full" />
+        <div className="w-10 sm:w-12 h-0.5 bg-coffee-400/60 mx-auto mt-3 sm:mt-4 rounded-full" />
       </motion.div>
 
       {/* Product Grid */}
@@ -426,7 +594,7 @@ function MenuSection({
         variants={staggerContainer}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 max-w-6xl mx-auto px-4"
+        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 lg:gap-6 max-w-6xl mx-auto px-3 sm:px-4 relative z-10"
       >
         {category.products.map((product, pIndex) => (
           <ProductCard
@@ -448,18 +616,19 @@ function AboutSection() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} className="py-16 sm:py-24 bg-white">
-      <div className="max-w-4xl mx-auto px-6 text-center">
+    <section ref={ref} className="py-12 sm:py-16 md:py-24 bg-warm-alt/50 relative overflow-hidden">
+      <FloatingParticles />
+      <div className="max-w-4xl mx-auto px-5 sm:px-6 text-center relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 bg-coffee-100/50 rounded-full px-4 py-1.5 mb-6">
+          <div className="inline-flex items-center gap-2 bg-coffee-200/40 rounded-full px-4 py-1.5 mb-5 sm:mb-6">
             <Coffee className="w-4 h-4 text-coffee-600" />
-            <span className="text-sm text-coffee-600">داستان ما</span>
+            <span className="text-xs sm:text-sm text-coffee-600">داستان ما</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold text-coffee-900 mb-6">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-coffee-900 mb-5 sm:mb-6">
             درباره Coffee Glacé
           </h2>
         </motion.div>
@@ -468,7 +637,7 @@ function AboutSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="space-y-4 text-coffee-600 leading-loose text-sm sm:text-base max-w-2xl mx-auto"
+          className="space-y-3 sm:space-y-4 text-coffee-600 leading-loose text-sm sm:text-base max-w-2xl mx-auto"
         >
           <p>
             کافی گلاسه با هدف ایجاد فضایی متفاوت برای عاشقان قهوه تأسیس شده
@@ -478,7 +647,7 @@ function AboutSection() {
           </p>
           <p>
             تیم باریستاهای حرفه‌ای ما با عشق و دقت، هر نوشیدنی را به
-            بهترین شکل ممکن آماده می‌کنند. از اسپرسو کلاسیک تا نامرینوی
+            بهترین شکل ممکن آماده می‌کنند. از اسپرسو کلاسیک تا قهوه ترک
             خاص ما، همه چیز با تازه‌ترین مواد اولیه و بیشترین کیفیت تهیه
             می‌شود.
           </p>
@@ -494,18 +663,18 @@ function AboutSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="grid grid-cols-3 gap-4 sm:gap-8 mt-12 max-w-lg mx-auto"
+          className="grid grid-cols-3 gap-3 sm:gap-8 mt-10 sm:mt-12 max-w-md sm:max-w-lg mx-auto"
         >
           {[
-            { value: "+۳۰", label: "نوع نوشیدنی" },
-            { value: "+۱۵", label: "دسر خانگی" },
+            { value: "+۳۵", label: "نوع نوشیدنی" },
+            { value: "+۱۸", label: "دسر خانگی" },
             { value: "+۵", label: "سال تجربه" },
           ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold text-coffee-800">
+            <div key={stat.label} className="text-center bg-warm-card rounded-xl p-3 sm:p-4 border border-coffee-200/30">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-coffee-800">
                 {stat.value}
               </div>
-              <div className="text-xs sm:text-sm text-coffee-500 mt-1">
+              <div className="text-[10px] sm:text-xs sm:text-sm text-coffee-500 mt-0.5 sm:mt-1">
                 {stat.label}
               </div>
             </div>
@@ -524,28 +693,28 @@ function ContactSection() {
   const isInView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} className="py-16 sm:py-24">
-      <div className="max-w-4xl mx-auto px-6">
+    <section ref={ref} className="py-12 sm:py-16 md:py-24 relative">
+      <div className="max-w-4xl mx-auto px-5 sm:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h2 className="text-2xl sm:text-3xl font-bold text-coffee-900 mb-3">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-coffee-900 mb-2 sm:mb-3">
             تماس با ما
           </h2>
-          <p className="text-coffee-500 text-sm">
+          <p className="text-coffee-500 text-xs sm:text-sm">
             منتظر دیدار شما هستیم
           </p>
-          <div className="w-12 h-0.5 bg-coffee-300 mx-auto mt-4 rounded-full" />
+          <div className="w-10 sm:w-12 h-0.5 bg-coffee-400/60 mx-auto mt-3 sm:mt-4 rounded-full" />
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5"
         >
           {[
             {
@@ -571,15 +740,15 @@ function ContactSection() {
           ].map((item) => (
             <div
               key={item.title}
-              className="bg-white rounded-2xl p-5 text-center shadow-sm border border-coffee-100/50 hover:shadow-md transition-shadow"
+              className="bg-warm-card rounded-2xl p-4 sm:p-5 text-center shadow-sm border border-coffee-200/40 hover:shadow-md hover:border-coffee-300/50 transition-all duration-300"
             >
-              <div className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-coffee-100 text-coffee-700 mb-3">
-                <item.icon className="w-5 h-5" />
+              <div className="inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-coffee-200/50 text-coffee-700 mb-2.5 sm:mb-3">
+                <item.icon className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <h3 className="text-sm font-semibold text-coffee-800 mb-1">
+              <h3 className="text-xs sm:text-sm font-semibold text-coffee-800 mb-1">
                 {item.title}
               </h3>
-              <p className="text-xs text-coffee-500 leading-relaxed">
+              <p className="text-[10px] sm:text-xs text-coffee-500 leading-relaxed">
                 {item.detail}
               </p>
             </div>
@@ -595,14 +764,14 @@ function ContactSection() {
    ═══════════════════════════════════════════ */
 function Footer() {
   return (
-    <footer className="bg-coffee-900 text-white/70 py-10 mt-auto">
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer className="bg-coffee-900 text-white/70 py-8 sm:py-10 mt-auto">
+      <div className="max-w-6xl mx-auto px-5 sm:px-6">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
           <div className="flex items-center gap-2">
             <Coffee className="w-5 h-5 text-amber-400" />
-            <span className="text-white font-bold text-lg">Coffee Glacé</span>
+            <span className="text-white font-bold text-base sm:text-lg">Coffee Glacé</span>
           </div>
-          <p className="text-xs text-white/40 text-center">
+          <p className="text-[10px] sm:text-xs text-white/40 text-center">
             تمامی حقوق مادی و معنوی این وب‌سایت متعلق به Coffee Glacé می‌باشد.
           </p>
         </div>
@@ -633,7 +802,7 @@ function ScrollToTop() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-6 left-6 z-40 w-12 h-12 bg-white rounded-full shadow-lg border border-coffee-200/50 flex items-center justify-center text-coffee-700 hover:bg-coffee-100 transition-colors"
+          className="fixed bottom-5 left-5 z-40 w-11 h-11 bg-warm-card rounded-full shadow-lg border border-coffee-300/40 flex items-center justify-center text-coffee-700 hover:bg-coffee-200/50 transition-colors"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
         >

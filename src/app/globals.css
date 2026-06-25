@@ -42,52 +42,55 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --color-coffee-50: #faf6f1;
-  --color-coffee-100: #f0e6d6;
-  --color-coffee-200: #e0cba8;
-  --color-coffee-300: #cda56e;
+  --color-coffee-50: #f5ede3;
+  --color-coffee-100: #e8ddd0;
+  --color-coffee-200: #d4c4a8;
+  --color-coffee-300: #c9a87c;
   --color-coffee-400: #b8864a;
   --color-coffee-500: #9a6b3a;
   --color-coffee-600: #7d5230;
   --color-coffee-700: #5e3b24;
   --color-coffee-800: #3d2618;
   --color-coffee-900: #1a110b;
-  --color-cream: #fdf8f0;
-  --color-warm-gray: #f5f0eb;
+  --color-cream: #f5ede3;
+  --color-warm-gray: #e8e0d5;
+  --color-warm-card: #f2ebe2;
+  --color-warm-section: #eee5da;
+  --color-warm-alt: #e5dace;
 }
 
 :root {
   --radius: 0.75rem;
-  --background: oklch(0.985 0.002 80);
-  --foreground: oklch(0.2 0.02 50);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.2 0.02 50);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.2 0.02 50);
+  --background: oklch(0.94 0.01 70);
+  --foreground: oklch(0.22 0.025 50);
+  --card: oklch(0.965 0.012 70);
+  --card-foreground: oklch(0.22 0.025 50);
+  --popover: oklch(0.97 0.01 70);
+  --popover-foreground: oklch(0.22 0.025 50);
   --primary: oklch(0.35 0.06 50);
   --primary-foreground: oklch(0.98 0.005 80);
-  --secondary: oklch(0.96 0.008 80);
+  --secondary: oklch(0.93 0.015 70);
   --secondary-foreground: oklch(0.3 0.04 50);
-  --muted: oklch(0.96 0.005 80);
-  --muted-foreground: oklch(0.5 0.02 50);
-  --accent: oklch(0.92 0.03 70);
+  --muted: oklch(0.92 0.012 70);
+  --muted-foreground: oklch(0.48 0.025 50);
+  --accent: oklch(0.88 0.04 65);
   --accent-foreground: oklch(0.3 0.04 50);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.91 0.01 80);
-  --input: oklch(0.91 0.01 80);
+  --border: oklch(0.86 0.02 70);
+  --input: oklch(0.86 0.02 70);
   --ring: oklch(0.55 0.06 50);
   --chart-1: oklch(0.5 0.08 50);
   --chart-2: oklch(0.6 0.1 150);
   --chart-3: oklch(0.65 0.12 30);
   --chart-4: oklch(0.7 0.08 80);
   --chart-5: oklch(0.55 0.06 280);
-  --sidebar: oklch(0.985 0.002 80);
-  --sidebar-foreground: oklch(0.2 0.02 50);
+  --sidebar: oklch(0.94 0.01 70);
+  --sidebar-foreground: oklch(0.22 0.025 50);
   --sidebar-primary: oklch(0.35 0.06 50);
   --sidebar-primary-foreground: oklch(0.98 0.005 80);
-  --sidebar-accent: oklch(0.96 0.008 80);
+  --sidebar-accent: oklch(0.93 0.015 70);
   --sidebar-accent-foreground: oklch(0.3 0.04 50);
-  --sidebar-border: oklch(0.91 0.01 80);
+  --sidebar-border: oklch(0.86 0.02 70);
   --sidebar-ring: oklch(0.55 0.06 50);
 }
 
@@ -110,14 +113,14 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: oklch(0.9 0.01 70);
 }
 ::-webkit-scrollbar-thumb {
-  background: oklch(0.75 0.04 50);
+  background: oklch(0.7 0.05 50);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.6 0.06 50);
+  background: oklch(0.55 0.07 50);
 }
 
 /* Hide scrollbar for horizontal nav */
@@ -142,26 +145,122 @@
 .img-shimmer {
   background: linear-gradient(
     90deg,
-    #f0e6d6 25%,
-    #f5efe6 50%,
-    #f0e6d6 75%
+    #e8ddd0 25%,
+    #f0e8dd 50%,
+    #e8ddd0 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
-/* Nav active indicator */
-.nav-item-active {
-  color: oklch(0.35 0.06 50);
-  font-weight: 600;
+/* ═══════════════════════════════════════════
+   STEAM ANIMATION
+   ═══════════════════════════════════════════ */
+@keyframes steam-1 {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scaleX(1) rotate(0deg);
+  }
+  15% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 0.5;
+    transform: translateY(-40px) scaleX(1.4) rotate(-5deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-80px) scaleX(1.8) rotate(3deg);
+  }
 }
-.nav-item-active::after {
-  content: "";
-  position: absolute;
-  bottom: -4px;
-  right: 0;
-  left: 0;
-  height: 2px;
-  background: oklch(0.35 0.06 50);
-  border-radius: 1px;
+
+@keyframes steam-2 {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scaleX(1) rotate(0deg);
+  }
+  15% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.4;
+    transform: translateY(-45px) scaleX(1.6) rotate(4deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-85px) scaleX(2) rotate(-2deg);
+  }
+}
+
+@keyframes steam-3 {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scaleX(1) rotate(0deg);
+  }
+  15% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.35;
+    transform: translateY(-35px) scaleX(1.3) rotate(-3deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-75px) scaleX(1.7) rotate(5deg);
+  }
+}
+
+.steam-wisp-1 {
+  animation: steam-1 3s ease-out infinite;
+}
+.steam-wisp-2 {
+  animation: steam-2 3.5s ease-out infinite 0.8s;
+}
+.steam-wisp-3 {
+  animation: steam-3 2.8s ease-out infinite 1.6s;
+}
+
+/* ═══════════════════════════════════════════
+   FLOATING PARTICLES (coffee-themed)
+   ═══════════════════════════════════════════ */
+@keyframes float-gentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-15px) rotate(5deg);
+  }
+  66% {
+    transform: translateY(-8px) rotate(-3deg);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) rotate(10deg) scale(1.05);
+  }
+}
+
+.float-gentle {
+  animation: float-gentle 6s ease-in-out infinite;
+}
+
+.float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+/* Section alternating backgrounds */
+.section-warm-a {
+  background: linear-gradient(180deg, oklch(0.945 0.012 68) 0%, oklch(0.935 0.014 66) 100%);
+}
+
+.section-warm-b {
+  background: linear-gradient(180deg, oklch(0.935 0.014 66) 0%, oklch(0.945 0.012 68) 100%);
+}
+
+.section-warm-c {
+  background: linear-gradient(180deg, oklch(0.94 0.01 70) 0%, oklch(0.93 0.015 68) 100%);
 }
