@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#dde8e8"/>
+  <circle cx="200" cy="160" r="70" fill="#7cb5c9" opacity="0.25"/>
+  <text x="200" y="175" text-anchor="middle" font-size="64" fill="#3b7d8c">🧊</text>
+  <text x="200" y="270" text-anchor="middle" font-size="16" fill="#4a7d8a" font-family="sans-serif" font-weight="bold">آیس لاته</text>
+</svg>
