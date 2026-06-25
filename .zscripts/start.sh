@@ -77,7 +77,8 @@ if [ -f "./next-service-dist/server.js" ]; then
     
     cd ../
 else
-    echo "⚠️  未找到 Next.js 服务器文件: ./next-service-dist/server.js"
+    echo "❌ 缺少 ./next-service-dist/server.js，无法启动"
+    exit 1
 fi
 
 if [ -f "./mini-services-start.sh" ]; then

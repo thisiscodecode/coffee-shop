@@ -11,7 +11,7 @@ A beautifully designed, fully responsive coffee shop website with a warm, elegan
 
 - **Bilingual (RTL)** — Full Persian/Farsi support with Vazirmatn font
 - **Animated UI** — Smooth scroll animations, floating particles, parallax hero with Framer Motion
-- **Product Menu** — 50+ items across 5 categories (Coffee, Iced Drinks, Hot Drinks, Tea & Herbal, Desserts)
+- **Product Menu** — 46 curated items across 5 categories (Coffee, Iced Drinks, Hot Drinks, Tea & Herbal, Desserts)
 - **Sticky Navigation** — Category-aware sticky nav with active section highlighting
 - **Responsive Design** — Optimized for mobile, tablet, and desktop
 - **Image Fallback** — Graceful placeholder for failed product images
