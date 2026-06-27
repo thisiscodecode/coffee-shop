@@ -1,167 +1,364 @@
-# Coffee Glacé | کافی گلاسه
+# ☕ Coffee Glacé — Coffee Shop Website
 
-A beautifully designed, fully responsive coffee shop website with a warm, elegant aesthetic. Built with Next.js 16, Tailwind CSS v4, Framer Motion, and Persian (Farsi) typography.
+A modern, elegant, and fully responsive coffee shop website built for presenting a café menu, brand story, and contact information in a beautiful Persian RTL interface.
 
-![Next.js](https://img.shields.io/badge/Next.js-16-black)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
-![License](https://img.shields.io/badge/License-MIT-green)
+Coffee Glacé is designed for coffee shops, cafés, and dessert bars that want a clean online presence where customers can quickly explore products, prices, ingredients, and store details.
 
-## Features
+---
 
-- **Bilingual (RTL)** — Full Persian/Farsi support with Vazirmatn font
-- **Animated UI** — Smooth scroll animations, floating particles, parallax hero with Framer Motion
-- **Product Menu** — 46 curated items across 5 categories (Coffee, Iced Drinks, Hot Drinks, Tea & Herbal, Desserts)
-- **Sticky Navigation** — Category-aware sticky nav with active section highlighting
-- **Responsive Design** — Optimized for mobile, tablet, and desktop
-- **Image Fallback** — Graceful placeholder for failed product images
-- **Scroll-to-Top** — Animated floating button for quick navigation
-- **Standalone Deployment** — Next.js standalone output for Docker/container deployments
-- **Caddy Reverse Proxy** — Production-ready reverse proxy configuration
+## 📌 Project Overview
 
-## Tech Stack
+**Coffee Glacé** is a polished single-page website for a coffee shop.
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript 5 |
-| Styling | Tailwind CSS v4 + tw-animate-css |
-| Animations | Framer Motion |
-| Icons | Lucide React |
-| Database | Prisma + SQLite |
-| Font | Vazirmatn (Google Fonts) |
-| Runtime | Bun |
-| Proxy | Caddy |
+It includes a premium landing section, animated product menu, category navigation, about section, contact section, and responsive mobile layout.
 
-## Getting Started
+The website is built with a warm coffee-inspired design, smooth animations, and Persian typography to create a pleasant browsing experience for customers.
 
-### Prerequisites
+### Main Benefits
 
-- [Bun](https://bun.sh/) (v1.0+)
-- [Node.js](https://nodejs.org/) (v18+)
+* Beautiful online menu for café customers
+* Fully responsive design for mobile and desktop
+* Persian RTL layout
+* Smooth animated user experience
+* Organized product categories
+* Clear prices and ingredients
+* Easy to customize for any coffee shop brand
+* Deployment-ready Next.js standalone build
 
-### Installation
+---
 
-```bash
-# Clone the repository
-git clone https://github.com/thisiscodecode/coffee-shop.git
-cd coffee-shop
+## 🧰 Tech Stack
 
-# Install dependencies
-bun install
+| Part           | Technology                |
+| -------------- | ------------------------- |
+| Framework      | Next.js                   |
+| Language       | TypeScript                |
+| Styling        | Tailwind CSS              |
+| Animations     | Framer Motion             |
+| Icons          | Lucide React              |
+| Font           | Vazirmatn                 |
+| Image Handling | Next.js Image             |
+| Database Layer | Prisma                    |
+| Database       | SQLite                    |
+| Runtime        | Bun                       |
+| Deployment     | Next.js Standalone, Caddy |
 
-# Set up environment variables
-cp .env.example .env
+---
 
-# Push database schema
-bun run db:push
+## 🏗️ Architecture
 
-# Start development server
-bun run dev
+Coffee Glacé uses a simple and clean frontend-first architecture.
+
+```text
+Customer Browser
+      ↓
+Next.js App
+      ↓
+Home Page Sections
+      ↓
+Local Menu Data
+      ↓
+Product Cards, Prices, Images, Ingredients
 ```
 
-The app will be available at [http://localhost:3000](http://localhost:3000).
+### 1. Next.js App
 
-### Available Scripts
+The website is served through a Next.js application.
 
-| Command | Description |
-|---------|-------------|
-| `bun run dev` | Start development server on port 3000 |
-| `bun run build` | Build production bundle (standalone output) |
-| `bun run start` | Start production server |
-| `bun run lint` | Run ESLint |
-| `bun run db:push` | Push Prisma schema to database |
-| `bun run db:generate` | Generate Prisma client |
-| `bun run db:migrate` | Run database migrations |
-| `bun run db:reset` | Reset database |
+It handles:
 
-## Project Structure
+* Page rendering
+* Layout structure
+* SEO metadata
+* Font loading
+* Image optimization
+* Production build output
 
+---
+
+### 2. Home Page
+
+The main website is built as a single-page experience.
+
+It includes:
+
+* Hero section
+* Sticky category navigation
+* Product menu sections
+* About section
+* Contact section
+* Footer
+* Scroll-to-top button
+
+This keeps the website simple, fast, and easy for customers to use.
+
+---
+
+### 3. Menu Data
+
+The product menu is stored in a structured TypeScript file.
+
+Each product includes:
+
+* Product name
+* Price
+* Ingredients
+* Image
+* Optional badge such as popular, special, or best-selling
+
+This makes it easy to update the menu without changing the page design.
+
+---
+
+### 4. Styling & Animation Layer
+
+Tailwind CSS controls the layout, spacing, colors, and responsive behavior.
+
+Framer Motion adds smooth animations such as:
+
+* Hero animations
+* Product reveal effects
+* Hover transitions
+* Mobile menu animation
+* Scroll-based effects
+
+---
+
+### 5. Deployment Layer
+
+The project supports standalone Next.js deployment.
+
+Caddy can be used as a reverse proxy in production, making the project easier to serve on a VPS or custom server.
+
+---
+
+## 🔄 Data Flow
+
+```text
+Visitor
+   ↓
+Website Opens
+   ↓
+Next.js Loads Page
+   ↓
+Menu Data Is Read
+   ↓
+Products Are Rendered
+   ↓
+Visitor Browses Categories
+   ↓
+Visitor Reads Contact Information
 ```
+
+### Step-by-Step Flow
+
+1. A visitor opens the coffee shop website.
+2. Next.js loads the main page and layout.
+3. The menu categories are loaded from local TypeScript data.
+4. Products are displayed as clean product cards.
+5. The visitor can jump between menu categories using the sticky navigation.
+6. Product images, prices, and ingredients are shown clearly.
+7. The visitor can read the café story in the about section.
+8. The visitor can find address, phone number, working hours, and Instagram details in the contact section.
+
+---
+
+## ✨ Features
+
+## Website Features
+
+* Elegant coffee shop landing page
+* Persian RTL interface
+* Vazirmatn Persian font
+* Responsive mobile-first design
+* Sticky navigation bar
+* Mobile hamburger menu
+* Smooth category scrolling
+* Active category highlighting
+* Animated hero section
+* Floating coffee-themed particles
+* Product cards with image, price, and ingredients
+* Product badges for special items
+* Image fallback support
+* About section
+* Contact section
+* Scroll-to-top button
+* SEO metadata
+* Warm coffee color palette
+
+---
+
+## Menu Features
+
+* Coffee category
+* Cold drinks category
+* Hot drinks category
+* Tea and herbal drinks category
+* Dessert category
+* Persian prices in تومان
+* Product ingredients
+* Product images
+* Special, popular, and best-selling badges
+
+---
+
+## 📁 Project Structure
+
+```text
 coffee-shop/
-├── .zscripts/           # Build & deployment scripts
-│   ├── build.sh         # Full build pipeline
-│   ├── dev.sh           # Development launcher
-│   └── start.sh         # Production start script
-├── prisma/
-│   └── schema.prisma    # Database schema
-├── public/              # Static assets
+│
 ├── src/
 │   ├── app/
-│   │   ├── api/         # API routes
-│   │   ├── globals.css  # Global styles & animations
-│   │   ├── layout.tsx   # Root layout (RTL, Vazirmatn font)
-│   │   └── page.tsx     # Homepage (menu, hero, about, contact)
+│   │   ├── globals.css        # Global styles, theme, and animations
+│   │   ├── layout.tsx         # Root layout, metadata, and Persian font
+│   │   └── page.tsx           # Main coffee shop website page
+│   │
 │   ├── components/
-│   │   └── ui/          # Reusable UI components (shadcn/ui)
-│   ├── hooks/           # Custom React hooks
+│   │   └── ui/                # Reusable UI components
+│   │
+│   ├── hooks/                 # Custom React hooks
+│   │
 │   └── lib/
-│       ├── db.ts        # Prisma client singleton
-│       ├── menu-data.ts # Menu data & types
-│       └── utils.ts     # Utility functions (cn)
-├── Caddyfile            # Caddy reverse proxy config
-├── next.config.ts       # Next.js configuration
-├── tailwind.config.ts   # Tailwind CSS configuration
-└── package.json
+│       ├── db.ts              # Prisma client setup
+│       ├── menu-data.ts       # Menu categories and products
+│       └── utils.ts           # Utility helpers
+│
+├── prisma/
+│   └── schema.prisma          # Prisma schema
+│
+├── public/                    # Static assets
+├── db/                        # SQLite database files
+├── Caddyfile                  # Caddy reverse proxy config
+├── next.config.ts             # Next.js configuration
+├── tailwind.config.ts         # Tailwind configuration
+├── package.json
+└── README.md
 ```
 
-## Environment Variables
+---
 
-Create a `.env` file based on `.env.example`:
+## 🚀 Setup Instructions
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/thisiscodecode/coffee-shop.git
+cd coffee-shop
+```
+
+---
+
+## 2. Install Dependencies
+
+```bash
+bun install
+```
+
+---
+
+## 3. Create Environment File
+
+Create a `.env` file in the project root:
 
 ```env
 DATABASE_URL=file:./db/dev.db
 ```
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DATABASE_URL` | SQLite database connection string | `file:./db/dev.db` |
-| `PORT` | Server port (production) | `3000` |
-| `HOSTNAME` | Server hostname (production) | `0.0.0.0` |
+---
 
-## Deployment
-
-### Docker / Standalone
-
-The project uses Next.js standalone output for minimal Docker images:
+## 4. Set Up the Database
 
 ```bash
-# Build
+bun run db:push
+bun run db:generate
+```
+
+---
+
+## 5. Run Development Server
+
+```bash
+bun run dev
+```
+
+Open the website at:
+
+```text
+http://localhost:3000
+```
+
+---
+
+## 🧪 Available Scripts
+
+| Command               | Description                    |
+| --------------------- | ------------------------------ |
+| `bun run dev`         | Start development server       |
+| `bun run build`       | Build the production app       |
+| `bun run start`       | Start the production server    |
+| `bun run lint`        | Run ESLint                     |
+| `bun run db:push`     | Push Prisma schema to database |
+| `bun run db:generate` | Generate Prisma client         |
+| `bun run db:migrate`  | Run Prisma migrations          |
+| `bun run db:reset`    | Reset the database             |
+
+---
+
+## 📦 Production Build
+
+Build the project:
+
+```bash
 bun run build
-
-# The standalone output is in .next/standalone/
-# Copy static assets:
-cp -r .next/static .next/standalone/.next/
-cp -r public .next/standalone/
 ```
 
-### Using Build Scripts
+Start production server:
 
 ```bash
-# Full build (includes mini-services if present)
-bash .zscripts/build.sh
-
-# Production start
-DATABASE_URL="file:/path/to/prod.db" bash .zscripts/start.sh
+bun run start
 ```
 
-### Caddy
+The project uses Next.js standalone output, which makes it suitable for VPS and container-based deployments.
 
-The included `Caddyfile` proxies requests on port 81:
+---
 
-- `/ws/*` → `localhost:3003` (WebSocket services)
-- Everything else → `localhost:3000` (Next.js)
+## 🌐 Caddy Reverse Proxy
 
-## Menu Categories
+The included `Caddyfile` can proxy traffic to the Next.js app.
 
-| Category | Items | Icon |
-|----------|-------|------|
-| قهوه (Coffee) | Espresso, Latte, Cappuccino, Mocha, and more | ☕ |
-| نوشیدنی‌های سرد (Iced Drinks) | Iced Latte, Frappuccino, Cold Brew, and more | 🧊 |
-| نوشیدنی‌های گرم (Hot Drinks) | Hot Chocolate, Chai Latte, Turkish Tea, and more | 🔥 |
-| چای و دمنوش (Tea & Herbal) | Green Tea, Chamomile, Earl Grey, and more | 🍃 |
-| دسر (Desserts) | Tiramisu, Cheesecake, Macaron, and more | 🍰 |
+Default app target:
 
-## License
+```text
+localhost:3000
+```
 
-MIT
+Default Caddy port:
+
+```text
+81
+```
+
+---
+
+## 🎨 Customization
+
+You can easily customize the project by editing:
+
+| File                   | Purpose                                                           |
+| ---------------------- | ----------------------------------------------------------------- |
+| `src/lib/menu-data.ts` | Update menu categories, products, prices, images, and ingredients |
+| `src/app/page.tsx`     | Update page sections and content                                  |
+| `src/app/globals.css`  | Update colors, theme, animations, and global styles               |
+| `src/app/layout.tsx`   | Update metadata, title, description, and font settings            |
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## 👥 Author
+
+Built by the **codecode** team.
